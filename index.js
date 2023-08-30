@@ -18,9 +18,9 @@ async function inquirer_init() {
         }
     ]);
 
-
     return answers;
 }
+
 async function init (){
 
     try {
