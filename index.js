@@ -233,8 +233,7 @@ async function selection(userInput){
                     choices: [
                         'Department',
                         'Role',
-                        'Employee',
-                        'Add Role'
+                        'Employee'
                     ],
                     name: 'table'
                 }
@@ -266,11 +265,91 @@ async function selection(userInput){
                         });
                         break;
                         init();
+                    case 'Role':
+                        db_table = 'role';
+                        const update_role = await inquirer.prompt([
+                            {
+                                type: 'input',
+                                message: "What's the role id you'd like to update?",
+                                name: 'roleID'
+                            },
+                            {
+                                type: 'input',
+                                message: "What's the new role's title you'd like to update to?",
+                                name: 'roleTitle'
+                            },
+                            {
+                                type: 'input',
+                                message: "Enter new salary",
+                                name: 'salary'
+                            },
+                            {
+                                type: 'input',
+                                message: "Confirm manager ID",
+                                name: 'depID'
+                            }
+                        ]);
+                        db.query(`UPDATE ${db_table} SET title='${update_role.roleTitle}', salary='${update_role.salary}', department_id=${update_role.depID} WHERE id=${update_role.roleID}`, function (err, results) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.log(`Department ${update_role.roleID} updated.`);
+                            }
+
+
+                            init();
+                        });
+                        break;
+                        init();
+                    case 'Employee':
+                        db_table = 'employee';
+                        const update_employee = await inquirer.prompt([
+                            {
+                                type: 'input',
+                                message: "What's the employee id you'd like to update?",
+                                name: 'employeeID'
+                            },
+                            {
+                                type: 'input',
+                                message: "What's employee name to update to?",
+                                name: 'employee_name'
+                            },
+                            {
+                                type: 'input',
+                                message: "What's employee last name t update to?",
+                                name: 'employee_lastN'
+                            },
+                            {
+                                type: 'input',
+                                message: "Typo role ID for employee",
+                                name: 'role_ID'
+                            },
+                            {
+                                type: 'input',
+                                message: "Typo manager ID for employee",
+                                name: 'manager_ID'
+                            }
+                        ]);
+                        db.query(`UPDATE ${db_table} SET first_name='${update_employee.employee_name}', last_name='${update_employee.employee_lastN}', role_ID=${update_employee.role_ID}, manager_ID=${update_employee.manager_ID} WHERE id=${update_employee.employeeID}`, function (err, results) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.log(`Department ${update_employee.employeeID} updated.`);
+                            }
+
+
+                            init();
+                        });
+                        break;
+                        init();
 
                 }
+
+
                 break;
-        default:
-            break;
+
+
+        break;
     }
 
 
