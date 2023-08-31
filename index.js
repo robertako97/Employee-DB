@@ -22,33 +22,9 @@ const db = mysql.createConnection(
 async function init() {
     try {
         const userInput = await inquirer_init();
-        console.log(userInput);
 
-        const db_table = await THE_if_func(userInput);
-        console.log(db_table);
+        await selection(userInput);
 
-        db.query(`SELECT * FROM ${db_table}`, function (err, results) {
-            if (err) {
-                console.error(err);
-            } else {
-                // Create a new table instance
-                const table = new Table({
-                    head: ['id', 'name'],
-                    colWidths: [10, 30] // Adjust column widths as needed
-                });
-
-                results.forEach(row => {
-                    table.push([row.id, row.name]);
-                });
-
-                // Print the table to the console
-                console.log(table.toString());
-
-            }
-
-            // Close the database connection
-            db.end();
-        });
 
     } catch (error) {
         if (error.isTtyError) {
@@ -58,7 +34,6 @@ async function init() {
         }
     }
 }
-init();
 /* -----> INIT INQUIRER <----- */
 async function inquirer_init() {
     const answers = await inquirer.prompt([
@@ -78,19 +53,174 @@ async function inquirer_init() {
     ]);
     return answers;
 }
-///////
-async function THE_if_func(userInput){
-    let db_table ='';
+/* ----->  USER RESPONSE INQUIRER <----- */
+async function selection(userInput){
+    let db_table = '';
+
+    switch (userInput.initiate) {
+        case 'Add Department':
+            db_table = 'department';
+
+            const answers = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'id_input',
+                    message: "Enter department id:",
+                },
+                {
+                    type: 'input',
+                    name: 'name_input',
+                    message: "Enter department name:",
+                },
+            ]);
 
 
-    if ( userInput.initiate =='View All Departments') {
-        db_table = 'department';
+            try {
+                (rows) = await db.execute(`INSERT INTO ${db_table} (id, name) VALUES (?, ?)`, [answers.id_input, answers.name_input]);
+                console.log(`Row inserted with ID: ${rows.insertId}`);
+            } catch (error) {
+                console.error(error);
+            }
 
+            init();
+            break;
+
+
+        case 'Add Role':
+            db_table = 'role';
+            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // Create a new table instance
+                    const table = new Table({
+                        head: ['id', 'title', 'salary', 'department_id'],
+                        colWidths: [10, 30, 30, 30] // Adjust column widths as needed
+                    });
+
+                    results.forEach(row => {
+                        table.push([row.id, row.name]);
+                    });
+
+                    // Print the table to the console
+                    console.log(table.toString());
+
+                }
+
+                // Close the database connection
+                db.end();
+            });
+
+            break;
+        case 'Add Employee':
+            db_table = 'employee';
+            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // Create a new table instance
+                    const table = new Table({
+                        head: ['id', 'first_name', 'last_name', 'role_id', 'manager_id'],
+                        colWidths: [10, 30, 30, 30, 30] // Adjust column widths as needed
+                    });
+
+                    results.forEach(row => {
+                        table.push([row.id, row.name]);
+                    });
+
+                    // Print the table to the console
+                    console.log(table.toString());
+                }
+
+               init();
+            });
+
+            break;
+
+        case 'View All Departments':
+            db_table = 'department';
+            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // Create a new table instance
+                    const table = new Table({
+                        head: ['id', 'name'],
+                        colWidths: [10, 30] // Adjust column widths as needed
+                    });
+
+                    results.forEach(row => {
+                        table.push([row.id, row.name]);
+                    });
+
+                    // Print the table to the console
+                    console.log(table.toString());
+
+                }
+
+                init();
+
+            });
+
+            break;
+        case 'View All Roles':
+            db_table = 'role';
+            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // Create a new table instance
+                    const table = new Table({
+                        head: ['id', 'title', 'salary', 'department_id'],
+                        colWidths: [10, 30, 30, 30] // Adjust column widths as needed
+                    });
+
+                    results.forEach(row => {
+                        table.push([row.id, row.name]);
+                    });
+
+                    // Print the table to the console
+                    console.log(table.toString());
+
+                }
+
+                init();
+            });
+
+            break;
+        case 'View All Employees':
+            db_table = 'employee';
+            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // Create a new table instance
+                    const table = new Table({
+                        head: ['id', 'first_name', 'last_name', 'role_id', 'manager_id'],
+                        colWidths: [10, 30, 30, 30, 30] // Adjust column widths as needed
+                    });
+
+                    results.forEach(row => {
+                        table.push([row.id, row.name]);
+                    });
+
+                    // Print the table to the console
+                    console.log(table.toString());
+
+                }
+
+                init();
+            });
+
+            break;
+
+
+        default:
+            break;
     }
-    return db_table;
 
-    console.log(db_table);
+
 
 }
-//////
 
+init();
