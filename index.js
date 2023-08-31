@@ -46,7 +46,8 @@ async function inquirer_init() {
                 'Add Role',
                 'View All Employees',
                 'Add Employee',
-                'Update Existing Record'
+                'Update Existing Record',
+                'Exit'
             ],
             name: 'initiate'
         }
@@ -140,6 +141,7 @@ async function selection(userInput){
                     name: 'managerId_input',
                     message: "Enter manager id:",
                 },
+
             ]);
             try {
                 (rows) = await db.execute(`INSERT INTO ${db_table} (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?)`, [answers3.id_input, answers3.name_input, answers3.lastName_input, answers3.role_input, answers3.managerId_input]);
@@ -219,7 +221,54 @@ async function selection(userInput){
             });
 
             break;
+        case 'Exit':
+            console.log('Goodbye');
+            db.close();
+            break;
+        case 'Update Existing Record':
+            const update = await inquirer.prompt([
+                {
+                    type: 'list',
+                    message: "What would you like to update?",
+                    choices: [
+                        'Department',
+                        'Role',
+                        'Employee',
+                        'Add Role'
+                    ],
+                    name: 'table'
+                }
+            ]);
+                switch (update.table){
+                    case 'Department':
+                        db_table = 'department';
+                        const update_dep = await inquirer.prompt([
+                            {
+                                type: 'input',
+                                message: "What's the department id you'd like to update?",
+                                name: 'depID'
+                            },
+                            {
+                                type: 'input',
+                                message: "What's the new department name you'd like to update to?",
+                                name: 'depName'
+                            }
+                        ]);
+                        db.query(`UPDATE ${db_table} SET name='${update_dep.depName}' WHERE id=${update_dep.depID}`, function (err, results) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.log(`Department ${update_dep.depID} updated.`);
+                            }
 
+
+                            init();
+                        });
+                        break;
+                        init();
+
+                }
+                break;
         default:
             break;
     }
