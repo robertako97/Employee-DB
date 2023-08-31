@@ -56,11 +56,9 @@ async function inquirer_init() {
 /* ----->  USER RESPONSE INQUIRER <----- */
 async function selection(userInput){
     let db_table = '';
-
     switch (userInput.initiate) {
         case 'Add Department':
             db_table = 'department';
-
             const answers = await inquirer.prompt([
                 {
                     type: 'input',
@@ -73,70 +71,84 @@ async function selection(userInput){
                     message: "Enter department name:",
                 },
             ]);
-
-
             try {
                 (rows) = await db.execute(`INSERT INTO ${db_table} (id, name) VALUES (?, ?)`, [answers.id_input, answers.name_input]);
-                console.log(`Row inserted with ID: ${rows.insertId}`);
+                console.log(`Row inserted with ID: ${answers.id_input}`);
             } catch (error) {
                 console.error(error);
             }
-
             init();
             break;
-
-
         case 'Add Role':
             db_table = 'role';
-            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    // Create a new table instance
-                    const table = new Table({
-                        head: ['id', 'title', 'salary', 'department_id'],
-                        colWidths: [10, 30, 30, 30] // Adjust column widths as needed
-                    });
-
-                    results.forEach(row => {
-                        table.push([row.id, row.name]);
-                    });
-
-                    // Print the table to the console
-                    console.log(table.toString());
-
-                }
-
-                // Close the database connection
-                db.end();
-            });
-
+            const answers2 = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'id_input',
+                    message: "Enter role id:",
+                },
+                {
+                    type: 'input',
+                    name: 'title_input',
+                    message: "Enter role title:",
+                },
+                {
+                    type: 'input',
+                    name: 'salary_input',
+                    message: "Enter role salary:",
+                },
+                {
+                    type: 'input',
+                    name: 'department_input',
+                    message: "Enter department id:",
+                },
+            ]);
+            try {
+                (rows) = await db.execute(`INSERT INTO ${db_table} (id, title, salary, department_id) VALUES (?, ?, ?, ?)`, [answers2.id_input, answers2.title_input, answers2.salary_input, answers2.department_input]);
+                console.log(`Row inserted with ID: ${answers2.id_input}`);
+            } catch (error) {
+                console.error(error);
+            }
+            init();
             break;
         case 'Add Employee':
             db_table = 'employee';
-            db.query(`SELECT * FROM ${db_table}`, function (err, results) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    // Create a new table instance
-                    const table = new Table({
-                        head: ['id', 'first_name', 'last_name', 'role_id', 'manager_id'],
-                        colWidths: [10, 30, 30, 30, 30] // Adjust column widths as needed
-                    });
 
-                    results.forEach(row => {
-                        table.push([row.id, row.name]);
-                    });
-
-                    // Print the table to the console
-                    console.log(table.toString());
-                }
-
-               init();
-            });
-
+            const answers3 = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'id_input',
+                    message: "Enter employee id:",
+                },
+                {
+                    type: 'input',
+                    name: 'name_input',
+                    message: "Enter employee first name:",
+                },
+                {
+                    type: 'input',
+                    name: 'lastName_input',
+                    message: "Enter employee last name:",
+                },
+                {
+                    type: 'input',
+                    name: 'role_input',
+                    message: "Enter employee role id:",
+                },
+                {
+                    type: 'input',
+                    name: 'managerId_input',
+                    message: "Enter manager id:",
+                },
+            ]);
+            try {
+                (rows) = await db.execute(`INSERT INTO ${db_table} (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?)`, [answers3.id_input, answers3.name_input, answers3.lastName_input, answers3.role_input, answers3.managerId_input]);
+                console.log(`Row inserted with ID: ${answers3.id_input}`);
+            } catch (error) {
+                console.error(error);
+            }
+            init();
             break;
-
         case 'View All Departments':
             db_table = 'department';
             db.query(`SELECT * FROM ${db_table}`, function (err, results) {
@@ -146,22 +158,16 @@ async function selection(userInput){
                     // Create a new table instance
                     const table = new Table({
                         head: ['id', 'name'],
-                        colWidths: [10, 30] // Adjust column widths as needed
+                        colWidths: [10, 30]
                     });
-
                     results.forEach(row => {
                         table.push([row.id, row.name]);
                     });
-
                     // Print the table to the console
                     console.log(table.toString());
-
                 }
-
                 init();
-
             });
-
             break;
         case 'View All Roles':
             db_table = 'role';
@@ -176,7 +182,7 @@ async function selection(userInput){
                     });
 
                     results.forEach(row => {
-                        table.push([row.id, row.name]);
+                        table.push([row.id, row.title, row.salary, row.department_id]);
                     });
 
                     // Print the table to the console
@@ -201,7 +207,7 @@ async function selection(userInput){
                     });
 
                     results.forEach(row => {
-                        table.push([row.id, row.name]);
+                        table.push([row.id, row.first_name, row.last_name, row.role_id, row.manager_id]);
                     });
 
                     // Print the table to the console
@@ -213,7 +219,6 @@ async function selection(userInput){
             });
 
             break;
-
 
         default:
             break;

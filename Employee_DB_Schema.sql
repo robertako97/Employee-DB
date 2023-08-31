@@ -20,6 +20,8 @@ CREATE TABLE role (
     ON DELETE SET NULL
 );
 
+DROP TABLE employee;
+
 CREATE TABLE employee (
         id INT NOT NULL,
         first_name VARCHAR(30) NOT NULL,
@@ -32,5 +34,8 @@ CREATE TABLE employee (
         ON DELETE NO ACTION,
         FOREIGN KEY (manager_id)
         REFERENCES employee(id)
-        ON DELETE SET NULL
-)
+
+);
+
+ALTER TABLE role
+MODIFY COLUMN salary DECIMAL(9, 2);
