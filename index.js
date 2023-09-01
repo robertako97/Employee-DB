@@ -5,6 +5,14 @@ const inquirer = require('inquirer');
 const Table = require('cli-table');
 const PORT = process.env.PORT || 3001;
 const app = express();
+/* -----> Title  <----- */
+console.log(`███████ ███    ███ ██████  ██       ██████  ██    ██ ███████ ███████     ██████  ██████  
+██      ████  ████ ██   ██ ██      ██    ██  ██  ██  ██      ██          ██   ██ ██   ██ 
+█████   ██ ████ ██ ██████  ██      ██    ██   ████   █████   █████       ██   ██ ██████  
+██      ██  ██  ██ ██      ██      ██    ██    ██    ██      ██          ██   ██ ██   ██ 
+███████ ██      ██ ██      ███████  ██████     ██    ███████ ███████     ██████  ██████  
+                                                                                         
+                                                                                         `);
 /* -----> Express middleware <----- */
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -54,7 +62,7 @@ async function inquirer_init() {
     ]);
     return answers;
 }
-/* ----->  USER RESPONSE INQUIRER <----- */
+/* ----->  USER RESPONSE INQUIRER & and yeah, everything else <----- */
 async function selection(userInput){
     let db_table = '';
     switch (userInput.initiate) {
@@ -207,7 +215,11 @@ async function selection(userInput){
 
             break;
         case 'Exit':
-            console.log('Goodbye');
+            console.log(' ██████   ██████   ██████  ██████  ██████  ██    ██ ███████ \n' +
+                '██       ██    ██ ██    ██ ██   ██ ██   ██  ██  ██  ██      \n' +
+                '██   ███ ██    ██ ██    ██ ██   ██ ██████    ████   █████   \n' +
+                '██    ██ ██    ██ ██    ██ ██   ██ ██   ██    ██    ██      \n' +
+                ' ██████   ██████   ██████  ██████  ██████     ██    ███████');
             db.close();
             break;
         case 'Update Existing Record':
