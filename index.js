@@ -63,18 +63,13 @@ async function selection(userInput){
             const answers = await inquirer.prompt([
                 {
                     type: 'input',
-                    name: 'id_input',
-                    message: "Enter department id:",
-                },
-                {
-                    type: 'input',
                     name: 'name_input',
                     message: "Enter department name:",
                 },
             ]);
             try {
-                (rows) = await db.execute(`INSERT INTO ${db_table} (id, name) VALUES (?, ?)`, [answers.id_input, answers.name_input]);
-                console.log(`Row inserted with ID: ${answers.id_input}`);
+                (rows) = await db.execute(`INSERT INTO ${db_table} (name) VALUES (?)`, [answers.name_input]);
+                console.log(`Department added.`);
             } catch (error) {
                 console.error(error);
             }
@@ -83,11 +78,6 @@ async function selection(userInput){
         case 'Add Role':
             db_table = 'role';
             const answers2 = await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'id_input',
-                    message: "Enter role id:",
-                },
                 {
                     type: 'input',
                     name: 'title_input',
@@ -105,8 +95,8 @@ async function selection(userInput){
                 },
             ]);
             try {
-                (rows) = await db.execute(`INSERT INTO ${db_table} (id, title, salary, department_id) VALUES (?, ?, ?, ?)`, [answers2.id_input, answers2.title_input, answers2.salary_input, answers2.department_input]);
-                console.log(`Row inserted with ID: ${answers2.id_input}`);
+                (rows) = await db.execute(`INSERT INTO ${db_table} (title, salary, department_id) VALUES (?, ?, ?)`, [answers2.title_input, answers2.salary_input, answers2.department_input]);
+                console.log(`Role Added.`);
             } catch (error) {
                 console.error(error);
             }
@@ -116,11 +106,6 @@ async function selection(userInput){
             db_table = 'employee';
 
             const answers3 = await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'id_input',
-                    message: "Enter employee id:",
-                },
                 {
                     type: 'input',
                     name: 'name_input',
@@ -144,8 +129,8 @@ async function selection(userInput){
 
             ]);
             try {
-                (rows) = await db.execute(`INSERT INTO ${db_table} (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?)`, [answers3.id_input, answers3.name_input, answers3.lastName_input, answers3.role_input, answers3.managerId_input]);
-                console.log(`Row inserted with ID: ${answers3.id_input}`);
+                (rows) = await db.execute(`INSERT INTO ${db_table} (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [answers3.name_input, answers3.lastName_input, answers3.role_input, answers3.managerId_input]);
+                console.log(`Employee Added.`);
             } catch (error) {
                 console.error(error);
             }
